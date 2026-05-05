@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - StreamTester PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <style>body { transition: background-color 0.3s, color 0.3s; }</style>
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col">
+
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 text-lg font-bold text-blue-600 dark:text-blue-400 hover:opacity-80">
+                ⬅ Back to Tools
+            </a>
+            <button id="theme-toggle" class="text-xl">🌙</button>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-4xl mx-auto px-4 py-12 space-y-12 leading-relaxed">
+        
+        <header class="text-center border-b border-gray-200 dark:border-gray-700 pb-10">
+            <h1 class="text-4xl font-extrabold mb-4">关于 StreamTester PRO</h1>
+            <p class="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">专业的流媒体播放解决方案，致力于为全球用户提供高质量、低延迟的视频播放体验。采用先进的 HTML5 技术和 HLS 协议，打造功能强大、易于使用的在线播放平台。</p>
+        </header>
+
+        <section>
+            <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-6">✨ 核心功能特性</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-xl font-bold mb-2">🎬 多格式支持</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">全面支持 M3U8、HLS 格式视频流播放，兼容各种主流视频编码格式，确保最佳的播放兼容性。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-xl font-bold mb-2">🌐 跨平台播放</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">基于 HTML5 技术开发，支持 Windows、Mac、Linux、iOS、Android 等所有主流操作系统和浏览器。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-xl font-bold mb-2">⚡ 高性能播放</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">采用先进的流媒体技术，支持自适应码率播放，根据网络状况自动调整视频质量，确保流畅播放。</p>
+                </div>
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                    <h3 class="text-xl font-bold mb-2">🔧 即开即用</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">无需下载安装任何软件，直接在浏览器中打开即可使用，提供便捷的在线播放体验。</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-blue-50 dark:bg-gray-800/50 p-8 rounded-xl border border-blue-100 dark:border-gray-700">
+            <h2 class="text-2xl font-bold text-blue-800 dark:text-blue-300 mb-4">🎯 发展愿景</h2>
+            <p class="text-gray-700 dark:text-gray-300 italic">"让视频播放变得简单而强大"</p>
+            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">我们致力于成为全球领先的在线视频播放解决方案提供商。未来将继续投入技术研发，为用户提供更高质量、更便捷的视频播放体验。我们相信，通过持续的技术创新和用户反馈，StreamTester PRO 将成为流媒体播放领域的标杆产品。</p>
+        </section>
+    </main>
+
+    <!-- 全局底部版权栏 -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-6 mt-auto">
+        <div class="max-w-4xl mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>📧 Contact / 客服邮箱：<a href="mailto:support@iweec.eu.org" class="hover:text-blue-500 transition">support@iweec.eu.org</a></p>
+            <p class="mt-2">&copy; 2026 air flow All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const themeBtn = document.getElementById('theme-toggle');
+        const htmlEl = document.documentElement;
+        themeBtn.addEventListener('click', () => {
+            htmlEl.classList.toggle('dark');
+            localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>
