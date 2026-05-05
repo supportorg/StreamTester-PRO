@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Center - StreamTester PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <style>body { transition: background-color 0.3s, color 0.3s; }</style>
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen flex flex-col">
+
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="../index.html" class="flex items-center gap-2 text-lg font-bold text-blue-600 dark:text-blue-400 hover:opacity-80">
+                ⬅ Back to Tools
+            </a>
+            <h1 class="text-xl font-bold hidden sm:block">📚 Help Center</h1>
+            <button id="theme-toggle" class="text-xl">🌙</button>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-10 w-full">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-4">Explore the M3U8 Knowledge Base</h2>
+            <p class="text-gray-500 dark:text-gray-400">Click on any article below to read.</p>
+        </div>
+
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-6 border-l-4 border-blue-500 pl-3">
+                <h3 class="text-2xl font-bold">📖 基础知识 (Basic Knowledge)</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <button onclick="openArticle('什么是 m3u8 协议', 'M3U8 是一种基于纯文本的播放列表格式，是苹果公司开发的 HLS (HTTP Live Streaming) 流媒体协议的基础。它将整个视频切分成无数个几秒钟的 .ts 小文件，从而实现极速加载和自适应码率。')" class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-blue-300 transition flex justify-between items-center group w-full text-left">
+                    <div class="flex items-center gap-3"><span class="text-xl">📄</span><span class="font-medium group-hover:text-blue-500 transition">什么是 m3u8 协议</span></div>
+                    <span class="text-gray-300 dark:text-gray-600 group-hover:text-blue-400">→</span>
+                </button>
+                <button onclick="openArticle('M3U8 协议原理解析', '播放器首先下载 M3U8 索引文件，读取内部的 TS 切片地址，然后依次下载这些切片并在内存中拼接播放。如果网络变差，播放器会自动读取低码率的 M3U8 索引，实现画质无缝降级。')" class="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:shadow-md hover:border-blue-300 transition flex justify-between items-center group w-full text-left">
+                    <div class="flex items-center gap-3"><span class="text-xl">⚙️</span><span class="font-medium group-hover:text-blue-500 transition">M3U8 协议原理解析</span></div>
+                    <span class="text-gray-300 dark:text-gray-600 group-hover:text-blue-400">→</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- 文章阅读弹窗 -->
+    <div id="article-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-[100] flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl max-w-2xl w-full max-h-[80vh] flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+                <h2 id="modal-title" class="text-xl font-bold text-blue-600 dark:text-blue-400">Title</h2>
+                <button onclick="closeArticle()" class="text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+            </div>
+            <div id="modal-content" class="p-6 overflow-y-auto text-base space-y-4 leading-relaxed text-gray-700 dark:text-gray-300"></div>
+        </div>
+    </div>
+
+    <!-- 全局底部版权栏 -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>📧 Contact / 客服邮箱：<a href="mailto:support@iweec.eu.org" class="hover:text-blue-500 transition">support@iweec.eu.org</a></p>
+            <p class="mt-2">&copy; 2026 air flow All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const themeBtn = document.getElementById('theme-toggle');
+        const htmlEl = document.documentElement;
+        themeBtn.addEventListener('click', () => {
+            htmlEl.classList.toggle('dark');
+            localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        function openArticle(title, content) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('article-modal').classList.remove('hidden');
+        }
+
+        function closeArticle() {
+            document.getElementById('article-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
