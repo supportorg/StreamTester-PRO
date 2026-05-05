@@ -64,7 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (typeof Hls !== 'undefined' && Hls.isSupported()) {
             hls = new Hls(hlsConfig);
-            hls.loadSource(url);
+            const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+hls.loadSource(proxyUrl);
             hls.attachMedia(video);
             
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
