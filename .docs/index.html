@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamTester Documentation - The Evolution of HLS</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+    <style>
+        body { transition: background-color 0.3s, color 0.3s; }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-200 min-h-screen">
+
+    <!-- 导航栏 -->
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- 【修改点】：使用 ../ 返回上一级根目录 -->
+            <a href="../index.html" class="flex items-center gap-2 text-lg font-bold text-blue-600 dark:text-blue-400 hover:opacity-80">
+                ⬅ <span data-i18n="navBack">Back to Tool</span>
+            </a>
+            <div class="flex gap-4">
+                <button id="doc-theme-toggle" class="text-xl hover:scale-110 transition-transform">🌙</button>
+                <button id="doc-lang-toggle" class="text-gray-500 dark:text-gray-400 hover:text-blue-500 font-medium">🌐 EN/中</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 文档主体内容 -->
+    <main class="max-w-4xl mx-auto px-4 py-12 leading-relaxed space-y-12">
+        
+        <header class="border-b border-gray-200 dark:border-gray-700 pb-8">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4" data-i18n="docH1">The Definitive Guide to HLS & M3U8</h1>
+            <p class="text-lg text-gray-500 dark:text-gray-400" data-i18n="docSub">Understanding the history, real-world applications, and the future of HTTP Live Streaming technology.</p>
+        </header>
+
+        <!-- 第一部分：什么是 M3U8 -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n="sec1Title">1. What is HLS and M3U8?</h2>
+            <p data-i18n="sec1P1"><strong>HTTP Live Streaming (HLS)</strong> is an adaptive bitrate streaming communications protocol developed by Apple. It works by breaking the overall video stream into a sequence of small HTTP-based file downloads. As the stream is played, the client may select from a number of different alternate streams containing the same material encoded at a variety of data rates.</p>
+            <p data-i18n="sec1P2">The <strong>.m3u8</strong> file is essentially a plain-text playlist. It serves as the index, telling the video player exactly where to find the video chunks (often .ts files) and specifying their duration and sequence.</p>
+        </section>
+
+        <!-- 第二部分：历史与发展 -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n="sec2Title">2. The History and Evolution</h2>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
+                <ul class="list-disc pl-5 space-y-3">
+                    <li data-i18n="sec2L1"><strong>2009 - The Genesis:</strong> Apple created HLS to address the lack of standard streaming support on the original iPhone (iPhone 3GS). Previously, protocols like RTMP were heavily blocked by corporate firewalls. Since HLS uses standard HTTP ports (80 and 443), it effortlessly bypasses firewalls.</li>
+                    <li data-i18n="sec2L2"><strong>2015 - Industry Dominance:</strong> With the decline of Adobe Flash, HTML5 video took over. HLS became the de facto standard for video delivery across almost all modern web browsers.</li>
+                    <li data-i18n="sec2L3"><strong>2017 - Official Standardization:</strong> HLS was officially published as RFC 8216 by the Internet Engineering Task Force (IETF).</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 第三部分：现实应用 -->
+        <section class="space-y-4">
+            <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n="sec3Title">3. Real-World Applications</h2>
+            <p data-i18n="sec3P1">The robust and adaptive nature of HLS makes it the backbone of modern digital media:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded">
+                    <h3 class="font-bold text-lg mb-2" data-i18n="app1Title">OTT Platforms & VOD</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="app1Desc">Streaming giants like Netflix, Disney+, and Hulu utilize adaptive streaming (HLS and DASH). When your internet slows down, HLS automatically switches to a lower-resolution chunk, preventing the "buffering circle of death."</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded">
+                    <h3 class="font-bold text-lg mb-2" data-i18n="app2Title">Live Broadcasting (IPTV)</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="app2Desc">Global sporting events and IPTV services (using M3U playlists) rely on HLS. Broadcasters can distribute streams to millions concurrently via standard Content Delivery Networks (CDNs).</p>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-800 p-5 rounded">
+                    <h3 class="font-bold text-lg mb-2" data-i18n="app3Title">Security & CCTV</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300" data-i18n="app3Desc">Modern smart home cameras and enterprise surveillance systems transcode RTSP streams into HLS so users can monitor feeds directly through web dashboards or mobile apps.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 第四部分：未来展望 -->
+        <section class="space-y-4 pb-10">
+            <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400" data-i18n="sec4Title">4. The Future: Low-Latency and Beyond</h2>
+            <p data-i18n="sec4P1">While traditional HLS is stable, its 10-30 second latency is unacceptable for interactive live streams (e.g., live auctions or gaming). The future pathways include:</p>
+            <ul class="space-y-4">
+                <li class="border-l-4 border-blue-500 pl-4">
+                    <strong class="text-lg" data-i18n="fut1Title">Low-Latency HLS (LL-HLS)</strong>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1" data-i18n="fut1Desc">Introduced by Apple, LL-HLS pushes latency down to under 2 seconds by utilizing HTTP/2 features and chunked transfer encoding.</p>
+                </li>
+                <li class="border-l-4 border-purple-500 pl-4">
+                    <strong class="text-lg" data-i18n="fut2Title">CMAF Transition</strong>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1" data-i18n="fut2Desc">The Common Media Application Format (CMAF) utilizes Fragmented MP4 (fMP4) instead of traditional TS files. This unifies HLS and DASH, dramatically reducing storage costs for platforms.</p>
+                </li>
+                <li class="border-l-4 border-green-500 pl-4">
+                    <strong class="text-lg" data-i18n="fut3Title">WebRTC Hybridization</strong>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mt-1" data-i18n="fut3Desc">For absolute sub-second delay, platforms are starting to use WebRTC for the primary feed, seamlessly falling back to HLS for massive audience scaling.</p>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        const themeBtn = document.getElementById('doc-theme-toggle');
+        const htmlEl = document.documentElement;
+
+        function updateIcon() { themeBtn.textContent = htmlEl.classList.contains('dark') ? '☀️' : '🌙'; }
+        updateIcon();
+
+        themeBtn.addEventListener('click', () => {
+            htmlEl.classList.toggle('dark');
+            localStorage.setItem('theme', htmlEl.classList.contains('dark') ? 'dark' : 'light');
+            updateIcon();
+        });
+
+        let docLang = 'en';
+        const docDict = {
+            en: { },
+            zh: {
+                navBack: "返回工具页",
+                docH1: "HLS 与 M3U8 技术终极指南",
+                docSub: "深入了解 HTTP Live Streaming (HLS) 的发展历史、现实应用场景以及未来的技术演进路线。",
+                sec1Title: "1. 什么是 HLS 与 M3U8？",
+                sec1P1: "<strong>HTTP Live Streaming (HLS)</strong> 是由苹果公司提出的一种基于 HTTP 的自适应码率流媒体传输协议。它的核心原理是将整个巨大的视频流，切分成无数个基于 HTTP 下载的小文件。播放器在播放时，可以根据用户当前的网络带宽，无缝切换不同画质（码率）的切片。",
+                sec1P2: "<strong>.m3u8</strong> 文件本质上是一个纯文本的“播放列表”。它相当于视频流的索引目录，告诉播放器去哪里下载视频分片（通常是 .ts 文件），并标明了每个分片的时长和先后顺序。",
+                sec2Title: "2. 历史与发展演进",
+                sec2L1: "<strong>2009 - 技术的诞生：</strong> 苹果公司开发了 HLS 协议，主要为了解决初代 iPhone (iPhone 3GS) 无法流畅观看在线视频的问题。早期 RTMP 协议由于使用特殊端口，经常被企业网的防火墙拦截。而 HLS 走的是标准的 HTTP (80/443) 端口，天生具备穿透任何防火墙的能力。",
+                sec2L2: "<strong>2015 - 统治行业：</strong> 随着 Adobe Flash 的彻底没落，HTML5 视频崛起。HLS 凭借其极高的兼容性，成为了跨现代浏览器、移动端 App 的事实标准。",
+                sec2L3: "<strong>2017 - 官方标准确立：</strong> 互联网工程任务组 (IETF) 正式将 HLS 协议发布为 RFC 8216 国际标准。",
+                sec3Title: "3. 现实中的核心应用场景",
+                sec3P1: "HLS 极具弹性和稳定性的特征，使其成为了现代数字媒体的基石：",
+                app1Title: "OTT 流媒体与点播 (VOD)",
+                app1Desc: "全球的流媒体巨头如 Netflix、爱奇艺、腾讯视频等，其底层均依赖自适应流媒体技术。当你的网速变慢时，HLS 会自动帮你切换到低分辨率切片，从而避免出现“无限缓冲加载”的转圈现象。",
+                app2Title: "电视直播与 IPTV",
+                app2Desc: "世界杯等全球体育赛事的直播，以及各地 IPTV 服务（通过加载海量 M3U 列表），深度依赖 HLS。因为走的是 HTTP 协议，电视台可以通过廉价的常规 CDN 节点，将直播画面分发给几千万观众而不会导致服务器崩溃。",
+                app3Title: "安防监控与智能家居",
+                app3Desc: "现代智能摄像头系统通常会在本地或云端，将传统的 RTSP 监控流转码为 HLS。这使得用户无需安装任何插件，直接在手机浏览器或 App 里就能实时查看监控画面。",
+                sec4Title: "4. 未来发展：超低延迟与融合",
+                sec4P1: "尽管传统的 HLS 极其稳定，但它动辄 10-30 秒的物理延迟，对于直播带货、在线拍卖、电竞直播等互动场景来说是无法接受的。HLS 技术的未来演进路线包括：",
+                fut1Title: "低延迟 HLS (LL-HLS)",
+                fut1Desc: "由苹果主导推出的 Low-Latency HLS 技术，通过利用 HTTP/2 协议的特性和分块传输编码（Chunked transfer encoding），成功将直播延迟压缩到了 2 秒以内。",
+                fut2Title: "向 CMAF 格式过渡",
+                fut2Desc: "通用媒体应用格式 (CMAF) 使用了 fMP4 切片来替代老旧的 TS 切片。这一改变打破了苹果 HLS 和谷歌 DASH 协议之间的壁垒，视频平台从此只需存储一份视频文件就能兼容两大协议，大幅节省了云存储成本。",
+                fut3Title: "与 WebRTC 的混合应用",
+                fut3Desc: "对于要求“绝对毫秒级”零延迟的场景，现代直播平台开始采用混合架构：核心互动用户使用 WebRTC 拉流，而为了应对几十万人的高并发观看，系统会自动降级回退到 HLS 网络进行分发。"
+            }
+        };
+
+        document.getElementById('doc-lang-toggle').addEventListener('click', () => {
+            docLang = docLang === 'en' ? 'zh' : 'en';
+            if (docLang === 'zh') {
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (docDict.zh[key]) el.innerHTML = docDict.zh[key];
+                });
+            } else {
+                window.location.reload(); 
+            }
+        });
+    </script>
+</body>
+</html>
