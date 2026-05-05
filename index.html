@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamTester PRO - HLS Player, Validator & MP4 Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' };
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.staticfile.net/plyr/3.7.8/plyr.min.css" />
+    <style>
+        body { transition: background-color 0.3s, color 0.3s; }
+        .plyr { aspect-ratio: 16/9; max-height: 60vh; border-radius: 0.5rem; background: #000; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+    </style>
+</head>
+<body class="font-sans antialiased bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
+
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-2 text-xl font-extrabold text-blue-600 dark:text-blue-400">
+                ⚡ <span data-i18n="navLogo">StreamTester PRO</span>
+            </div>
+            <div class="flex items-center gap-4 sm:gap-6 text-sm font-medium overflow-x-auto">
+                <button onclick="switchTab('single')" id="nav-single" class="text-blue-600 dark:text-blue-400 font-bold whitespace-nowrap" data-i18n="navSingle">Player</button>
+                <button onclick="switchTab('batch')" id="nav-batch" class="text-gray-500 dark:text-gray-400 hover:text-blue-500 whitespace-nowrap" data-i18n="navBatch">Batch Validator</button>
+                <button onclick="switchTab('convert')" id="nav-convert" class="text-gray-500 dark:text-gray-400 hover:text-blue-500 whitespace-nowrap" data-i18n="navConvert">M3U8 to MP4</button>
+                <div class="w-px h-5 bg-gray-300 dark:bg-gray-600 hidden sm:block"></div>
+                <a href="help/index.html" class="text-gray-500 dark:text-gray-400 hover:text-blue-500 whitespace-nowrap" data-i18n="navHelp">Help Center</a>
+                <a href="about/index.html" class="text-gray-500 dark:text-gray-400 hover:text-blue-500 whitespace-nowrap" data-i18n="navAbout">About Us</a>
+                <div class="w-px h-5 bg-gray-300 dark:bg-gray-600 hidden sm:block"></div>
+                <button id="theme-toggle" class="text-xl hover:scale-110 transition-transform">🌙</button>
+                <button id="lang-toggle" class="text-gray-500 dark:text-gray-400 hover:text-blue-500 whitespace-nowrap">🌐 EN/中</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 py-6">
+        
+        <!-- Tab 1: 单播测试 -->
+        <div id="tab-single" class="block">
+            <div class="flex flex-col sm:flex-row gap-2 mb-6">
+                <input type="text" id="stream-url" placeholder="https://example.com/stream.m3u8" class="flex-grow bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-3 text-sm focus:outline-none focus:border-blue-500 shadow-sm">
+                <button id="play-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded transition shadow-sm" data-i18n="btnTest">Play</button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div class="lg:col-span-3 rounded overflow-hidden shadow-lg border border-gray-200 dark:border-gray-800 bg-black">
+                    <video id="video-player" controls crossorigin playsinline></video>
+                </div>
+                <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded p-4 shadow-sm flex flex-col">
+                    <h3 class="font-bold border-b border-gray-200 dark:border-gray-700 pb-2 mb-4" data-i18n="diagTitle">Diagnostics</h3>
+                    <div class="space-y-4 text-sm">
+                        <div><p class="text-gray-500 uppercase text-xs" data-i18n="diagStatus">Status</p><p id="stat-status" class="font-mono mt-1 font-bold">Idle</p></div>
+                        <div><p class="text-gray-500 uppercase text-xs" data-i18n="diagRes">Resolution</p><p id="stat-res" class="font-mono mt-1">-- x --</p></div>
+                        <div><p class="text-gray-500 uppercase text-xs" data-i18n="diagBitrate">Bitrate</p><p id="stat-bitrate" class="font-mono mt-1 text-blue-500">-- Mbps</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm">
+                <h3 class="text-lg font-bold mb-2 text-blue-600 dark:text-blue-400" data-i18n="embedTitle">Share & Embed (嵌入网站)</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-3" data-i18n="embedSub">Copy this code to embed the player on your own website:</p>
+                <!-- 【修改点】：增加了 id="embed-code" -->
+                <code id="embed-code" class="block bg-gray-100 dark:bg-gray-900 p-4 rounded text-sm text-gray-800 dark:text-gray-300 break-all select-all border border-gray-200 dark:border-gray-700">
+                    &lt;iframe src="https://m3u8player.eu.cc/?url=https://example.com/video.m3u8" width="100%" height="500" allowfullscreen&gt;&lt;/iframe&gt;
+                </code>
+                <div class="mt-6 text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                    <h4 class="font-bold text-gray-900 dark:text-white text-base" data-i18n="seoH1">What is an M3U8 file?</h4>
+                    <p data-i18n="seoP1">An M3U8 file is a playlist file used by various audio and video playback programs. It is the basis for HTTP Live Streaming (HLS) format originally developed by Apple. Our tool allows you to test and play these streams directly in your browser without installing any software.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: 批量检测 -->
+        <div id="tab-batch" class="hidden">
+            <div class="mb-4">
+                <h2 class="text-xl font-bold mb-2" data-i18n="batchTitle">M3U Playlist Optimizer</h2>
+                <p class="text-sm text-gray-500 dark:text-gray-400" data-i18n="batchSub">Paste your `#EXTM3U` content. We will test latency, fetch bitrate, and let you export a sorted playlist.</p>
+            </div>
+            <textarea id="m3u-input" rows="8" class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-4 text-sm font-mono focus:outline-none focus:border-blue-500 shadow-sm mb-4" placeholder="#EXTM3U\n#EXTINF:-1 group-title=\&quot;Live\&quot;,CCTV1\nhttp://example.com/cctv1.m3u8\n..."></textarea>
+            <div class="flex flex-wrap gap-3 mb-4 items-center">
+                <button id="batch-start-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded shadow-sm transition" data-i18n="batchStart">▶ Start Test</button>
+                <span id="batch-progress" class="text-sm font-mono text-gray-600 dark:text-gray-300"></span>
+            </div>
+            <div id="export-panel" class="hidden bg-blue-50 dark:bg-gray-800/50 border border-blue-200 dark:border-gray-700 rounded p-4 mb-6 flex flex-wrap items-center gap-4">
+                <span class="text-sm font-bold text-blue-800 dark:text-blue-300" data-i18n="expTitle">Export Options:</span>
+                <button id="btn-export-csv" class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-sm py-2 px-4 rounded transition shadow-sm">💾 CSV</button>
+                <div class="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+                <select id="m3u-sort-type" class="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 text-sm rounded p-2 focus:outline-none shadow-sm">
+                    <option value="latency" data-i18n="optLat">Sort by Latency (Fastest first)</option>
+                    <option value="bitrate" data-i18n="optBit">Sort by Bitrate (Highest first)</option>
+                    <option value="original" data-i18n="optOrig">Original Order (Dead links at bottom)</option>
+                </select>
+                <button id="btn-export-m3u" class="bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 px-4 rounded shadow-sm transition">💾 Export .m3u8</button>
+            </div>
+            <div class="overflow-x-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-sm max-h-[500px] overflow-y-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead class="bg-gray-100 dark:bg-gray-900 sticky top-0 shadow-sm">
+                        <tr>
+                            <th class="p-3 font-semibold border-b border-gray-200 dark:border-gray-700">#</th>
+                            <th class="p-3 font-semibold border-b border-gray-200 dark:border-gray-700" data-i18n="thName">Channel Name</th>
+                            <th class="p-3 font-semibold border-b border-gray-200 dark:border-gray-700" data-i18n="thURL">Stream URL</th>
+                            <th class="p-3 font-semibold border-b border-gray-200 dark:border-gray-700" data-i18n="thStatus">Status</th>
+                            <th class="p-3 font-semibold border-b border-gray-200 dark:border-gray-700" data-i18n="thLat">Latency</th>
+                            <th class="p-3 font-semibold border-b border-gray-200 dark:border-gray-700" data-i18n="thBit">Max Bitrate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batch-results-body" class="divide-y divide-gray-200 dark:divide-gray-700"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: M3U8 转 MP4 -->
+        <div id="tab-convert" class="hidden max-w-3xl mx-auto mt-10">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-3" data-i18n="cvTitle">M3U8 to MP4 Converter</h2>
+                <p class="text-gray-500 dark:text-gray-400 text-sm" data-i18n="cvSub">Client-side conversion. Downloads and stitches TS segments directly in your browser.</p>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-2 mb-4">
+                <input type="text" id="convert-url" placeholder="https://example.com/video.m3u8" class="flex-grow bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded p-4 text-sm focus:outline-none focus:border-blue-500 shadow-sm">
+                <button id="convert-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded transition shadow-sm whitespace-nowrap" data-i18n="cvBtn">Start Convert</button>
+            </div>
+
+            <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-6 cursor-pointer">
+                <input type="checkbox" id="use-cors-proxy" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600">
+                <span data-i18n="cvProxy">Use CORS Proxy (Check this if download fails due to cross-origin errors)</span>
+            </label>
+
+            <div id="convert-progress-area" class="hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6 shadow-sm mb-6">
+                <div class="flex justify-between text-sm font-bold mb-2">
+                    <span id="cv-status-text" class="text-blue-600 dark:text-blue-400">Initializing...</span>
+                    <span id="cv-percent">0%</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4 overflow-hidden">
+                    <div id="cv-progress-bar" class="bg-blue-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div id="cv-log" class="bg-gray-100 dark:bg-gray-900 text-gray-500 dark:text-gray-400 font-mono text-xs p-3 rounded h-32 overflow-y-auto">
+                    Ready to fetch manifest...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 全局底部版权栏 -->
+    <footer class="border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>📧 Contact / 客服邮箱：<a href="mailto:support@iweec.eu.org" class="hover:text-blue-500 transition">support@iweec.eu.org</a></p>
+            <p class="mt-2">&copy; 2026 air flow All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.staticfile.net/hls.js/1.3.5/hls.min.js"></script>
+    <script src="https://cdn.staticfile.net/plyr/3.7.8/plyr.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
